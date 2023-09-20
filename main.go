@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"p-friday/glox/scanner"
 	"path/filepath"
 )
 
@@ -23,12 +25,12 @@ func main() {
 func RunFile(path string) {
 	file, err := filepath.Abs(path)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	bytes, err := os.ReadFile(file)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	run(string(bytes))
 }
@@ -38,12 +40,12 @@ func RunPrompt() {
 	reader := bufio.NewReader(input)
 
 	for {
-		fmt.Print("> ")
+		fmt.Print(">> ")
 		line, _, err := reader.ReadLine()
 		if err == io.EOF {
 			os.Exit(0)
 		} else if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 
 		if len(line) == 0 {
@@ -55,19 +57,10 @@ func RunPrompt() {
 }
 
 func run(source string) {
-	scanner := NewScanner() //lexer
+	scanner := scanner.NewScanner(source) //lexer
 	tokens := scanner.ScanTokens()
 
-	for i, token := range tokens {
+	for _, token := range tokens {
 		fmt.Println(token)
 	}
-}
-
-func error(line int, message string) {
-	report(line, "", message)
-}
-
-func report(line int, where string, message string) {
-	fmt.Println("[line " + string(line) + "] Error" + where + ": " + message)
-	//hadError := true
 }
