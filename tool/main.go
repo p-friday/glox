@@ -38,7 +38,11 @@ func defineAst(outputDir string, baseName string, types []string) {
 	writer.WriteString("import \"p-friday/glox/token\"\n")
 	writer.WriteByte('\n')
 	writer.WriteString("type " + baseName + " interface {")
+	writer.WriteString("	accept[T any](visitor Visitor[T]) T")
 	writer.WriteString("}\n")
+	
+	defineVisitor(writer, baseName, types)
+
 	writer.WriteByte('\n')
 	for _, tp := range types {
 		typeName := strings.TrimSpace(strings.Split(tp, ":")[0])
@@ -59,4 +63,13 @@ func defineType(writer *bufio.Writer, baseName string, typeName string, fieldLis
 	}
 	writer.WriteString("}\n")
 	writer.WriteByte('\n')
+}
+
+func defineVisitor(writer *bufio.Writer, baseName string, types []string) {
+	writer.WriteString("type " + baseName + "[T any] interface {\n")
+	for _, tp := range types {
+		typeName := strings.TrimSpace(strings.Split(tp, ":")[0])
+		writer.WriteString("	visit" + typeName + baseName + "(" + strings.ToLower(baseName) + " " + typeName + ") T\n")
+	}
+	writer.WriteString("}\n")
 }
