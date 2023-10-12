@@ -57,8 +57,8 @@ func RunPrompt() {
 }
 
 func run(source string) {
-	scanner := scanner.NewScanner(source) //lexer
-	tokens := scanner.ScanTokens()
+	lexer := scanner.NewScanner(source)
+	tokens := lexer.ScanTokens()
 
 	for _, token := range tokens {
 		fmt.Println(token)
