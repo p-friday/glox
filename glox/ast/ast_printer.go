@@ -6,8 +6,7 @@ import (
 	s "strings"
 )
 
-type AstPrinter struct {
-}
+type AstPrinter struct{}
 
 func (printer *AstPrinter) print(expr Expr) interface{} {
 	return expr.accept(printer)
@@ -39,7 +38,7 @@ func (ap *AstPrinter) parenthesize(name string, exprs ...Expr) string {
 	builder.WriteString(name)
 	for _, expr := range exprs {
 		builder.WriteByte(' ')
-		builder.WriteString(expr.accept(ap).(string))
+		builder.WriteString(fmt.Sprint(expr.accept(ap)))
 	}
 	builder.WriteByte(')')
 
