@@ -37,9 +37,10 @@ func defineAst(outputDir string, baseName string, types []string) {
 	writer.WriteByte('\n')
 	writer.WriteString("import \"p-friday/glox/token\"\n")
 	writer.WriteByte('\n')
-	writer.WriteString("type " + baseName + " interface {")
-	writer.WriteString("	accept[T any](visitor Visitor[T]) T")
+	writer.WriteString("type " + baseName + " interface {\n")
+	writer.WriteString("	accept(Visitor) interface{}\n")
 	writer.WriteString("}\n")
+	writer.WriteByte('\n')
 	
 	defineVisitor(writer, baseName, types)
 
@@ -63,13 +64,22 @@ func defineType(writer *bufio.Writer, baseName string, typeName string, fieldLis
 	}
 	writer.WriteString("}\n")
 	writer.WriteByte('\n')
+
+	// constructor
+	//writer.WriteString("func New" + typeName + baseName + "()")
+	
+	// accept method override
+	writer.WriteString("func (" + strings.ToLower(typeName) + " *" + typeName + ") accept(visitor Visitor) interface{} {\n")
+	writer.WriteString("\treturn visitor.visit" + typeName + baseName + "(" + strings.ToLower(typeName) + ")\n")
+	writer.WriteString("}\n")
+	writer.WriteByte('\n')
 }
 
 func defineVisitor(writer *bufio.Writer, baseName string, types []string) {
-	writer.WriteString("type " + baseName + "[T any] interface {\n")
+	writer.WriteString("type Visitor interface {\n")
 	for _, tp := range types {
 		typeName := strings.TrimSpace(strings.Split(tp, ":")[0])
-		writer.WriteString("	visit" + typeName + baseName + "(" + strings.ToLower(baseName) + " " + typeName + ") T\n")
+		writer.WriteString("	visit" + typeName + baseName + "(*" + typeName + ") interface{}\n")
 	}
 	writer.WriteString("}\n")
 }

@@ -6,20 +6,22 @@ import (
 	"io"
 	"log"
 	"os"
+	"p-friday/glox/ast"
 	"p-friday/glox/scanner"
 	"path/filepath"
 )
 
 func main() {
-	args := os.Args[1:]
-	if len(args) > 1 {
-		fmt.Println("Usage: glox [script]")
-		os.Exit(64)
-	} else if len(args) == 1 {
-		RunFile(args[0])
-	} else {
-		RunPrompt()
-	}
+	ast.AstPrinterTest()
+	// args := os.Args[1:]
+	// if len(args) > 1 {
+	// 	fmt.Println("Usage: glox [script]")
+	// 	os.Exit(64)
+	// } else if len(args) == 1 {
+	// 	RunFile(args[0])
+	// } else {
+	// 	RunPrompt()
+	// }
 }
 
 func RunFile(path string) {
